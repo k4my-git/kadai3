@@ -19,33 +19,39 @@ class UsersController < ApplicationController
 		if current_user.id != @user.id
 		   redirect_to user_path(current_user.id)
 		end
-    end
+  end
 
-    def update
-    	@user = User.find(params[:id])
-    	if @user.update(user_params)
-    	   flash[:notice] = "successfully"
-    		redirect_to user_path(@user.id)
+  def update
+  	@user = User.find(params[:id])
+  	if @user.update(user_params)
+  	   flash[:notice] = "successfully"
+  		redirect_to user_path(@user.id)
+  	else
+  		render :edit
+ 		end
+  end
 
-    	else
-    		render :edit
+  def follows
+    @user = User.find(params[:id])
+    @users = @user.followed
+  end
 
-   		end
+  def followers
+    @user = User.find(params[:id])
+    @users = @user.follower
+  end
 
-    end
+  private
 
-    private
-    def user_params
+  def user_params
 		params.require(:user).permit(:name, :introduction, :profile_image_id)
 	end
 
-    def check_current_user?
-    	user = User.find(params[:id])
-    	if current_user.id != user.id
-    		redirect_to user_path(current_user.id)
-
-    	end
-
-    end
+  def check_current_user?
+  	user = User.find(params[:id])
+  	if current_user.id != user.id
+  		redirect_to user_path(current_user.id)
+  	end
+  end
     	
 end
